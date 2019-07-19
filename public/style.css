@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:400,700');
+
+html,
+body {
+
+  margin: 0;
+  height: 100%;
+
+
+}
+.logo{
+  position: absolute;
+  height: 3.5em;
+  right: 5%;
+z-index: 1030;
+}
+ 
+h1 {
+  font-family: "Merriweather", serif;
+  font-size: 32px;
+  font-weight: bold;
+
+}
+#titulo {
+padding: 5px 10px;
+}
+
+.unaClase{
+  background-color: grey;
+}
+
+@media only screen and (orientation: Portrait) {
+  .mostrar-portrait{
+    display: block;
+  }
+
+  .mostrar-landscape{
+    display: none;
+  }
+
+  #tabla-partidos{
+    width: 100%;
+  }
+}
+
+@media only screen and (orientation: Landscape) {
+  .mostrar-portrait{
+    display: none;
+  }
+
+  .mostrar-landscape{
+    display: block;
+  }
+
+  #tabla-partidos{
+    width: 50%;
+  }
+}

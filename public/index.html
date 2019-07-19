@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="description" content="Demonstrates the use of Google Cloud Database with a Firebase DB">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <link rel="apple-touch-icon" sizes="57x57" href="imagenes/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="imagenes/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="imagenes/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="imagenes/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="imagenes/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="imagenes/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="imagenes/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="imagenes/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="imagenes/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="imagenes/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="imagenes/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="imagenes/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="imagenes/favicon-16x16.png">
+    <link rel="manifest" href="imagenes/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="imagenes/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script defer src="/__/firebase/6.2.3/firebase-app.js"></script>
+    <script defer src="/__/firebase/6.2.3/firebase-auth.js"></script>
+    <script defer src="/__/firebase/6.2.3/firebase-database.js"></script>
+    <script defer src="/__/firebase/6.2.3/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/6.2.3/firebase-storage.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>index</title>
+</head>
+
+<body>
+    <div class="#4db6ac teal lighten-2" style="width:100%; height: 100%" id="app">
+
+        <div class="text-left">
+            <h1 id="titulo" class="text-white collection-header">NYSL</h1>
+        </div>
+        <div class="background">
+            <div class="d-flex align-items-center">
+                <h4 class="p-0 bg-primary text-white text-center #00897b teal darken-1 w-100" id="titulo2">GAME SCHEDULE
+                </h4>
+                <img src="nysl_logo.png" alt="logo" class="logo align-right">
+            </div>
+        </div>
+
+
+        <div class="row">
+
+
+            <div id="tabla-partidos">
+                <ul class="list-group">
+                    <li v-for="(partido, index) in partidos"
+                        class="list-group-item border-dark d-flex text-center align-items-center">
+                        <span
+                            class="flex-shrink text-center"><p class="p-0 m-0">{{  partido.dia + '/' + partido.mes}}</p> {{partido.horario }}</span>
+                        <span class="w-50">{{ partido.nombre }}
+                        </span>
+                        <span>
+                            <a class="mostrar-portrait" id="btn-maps" v-bind:href="partido.url">{{ partido.lugar }}</a>
+                            <a class="mostrar-landscape btn-estadio-class" v-bind:id="'btn-estadio' + index"
+                                v-on:click="seleccionarEstadio(partido.url, index)">{{ partido.lugar }}</a>
+                        </span>
+
+                    </li>
+                </ul>
+           </div>
+        
+        
+      
+            <div class="mostrar-landscape" style="width: 50%">
+                <iframe id="map-seleccionado"
+                    src="https://www.google.com/maps/d/embed?mid=1SID7QdfDWObUWMXQOsC6PyJM3FKPEW9K" width="95%"
+                    height="100%"></iframe>
+            </div>
+       
+            
+
+        <div class="fixed-action-btn mb-4">
+            <a class="btn-floating btn-large #bdbdbd gris lighten-1 nav-link">
+                <i class="large material-icons">contact_mail</i>
+            </a>
+        </div>
+      
+
+        <button id="sign-in-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i> Sign in with Google</button>
+        <button id="sign-out-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i> Sign out</button>
+
+
+        <footer class="fixed-bottom border-dark #cfd8dc blue-grey lighten-4 ">
+            <ul class="nav justify-content-around m-10">
+                <li v-for="mes in meses" class="nav-item border border-dark flex-fill text-center">
+                    <a class="nav-link" v-on:click="cambiarMes(mes.numero)">{{ mes.nombre }}</a>
+                </li>
+            </ul>
+        </footer>
+    </div>
+</div>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="partidos.js"></script>
+<script src="main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</html>
